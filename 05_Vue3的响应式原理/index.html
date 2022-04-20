@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let person = {
+            name: '张三',
+            age: 18
+        }
+        // #region
+        // 模拟Vue2中实现响应式
+        // let p = {}
+        // Object.defineProperty(p,'name',{
+        //     configurable:true,
+        //     get(){
+        //         return person.name;
+        //     },
+        //     set(value){//有人修改了name值
+        //         person.name = value
+        //     }
+        // })
+        // Object.defineProperty(p,'age',{
+        //     get(){
+        //         return person.age;
+        //     },
+        //     set(value){//age
+        //         person.age = value
+        //     }
+        // })
+        //#endregion
+
+
+        // #region
+        // 模拟Vue3中实现响应式
+        const p = new Proxy(person, {
+            // get可以捕获到数据被读取
+            get(target,key){
+                console.log("有人读取了数据");
+                return Reflect.get(target,key);
+            },
+            // set可以捕获到数据被修改或者被添加的操作
+            set(target,key,value){
+                console.log(`修改了${key}`);
+                Reflect.set(target,key,value);
+            },
+            // deleteProperty可以捕获到数据被删除的操作
+            deleteProperty(target , key){
+                console.log("删除");
+                return Reflect.deleteProperty(target,key);
+            }
+        });
+        //#endregion
+        // const obj = { a: 1, b: 2 }
+
+
+        // try catch 异常处理
+        //  Object.defineProperty使用
+        //#region 
+        // try {
+        //     Object.defineProperty(obj, 'c', {
+        //         get() {
+        //             return 3;
+        //         }
+        //     })
+        //     Object.defineProperty(obj, 'c', {
+        //         get() {
+        //             return 4;
+        //         }
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        // }
+        //#endregion
+
+
+        // Reflect异常处理手段
+        // Reflect.defineProperty使用
+        //#region 
+        // const x1 = Reflect.defineProperty(obj,'c',{
+        //     get(){
+        //         return 3;
+        //     }
+        // })
+        // const x2 = Reflect.defineProperty(obj,'c',{
+        //     get(){
+        //         return 4;
+        //     }
+        // })
+        // if(x2){
+        //     console.log('xxx操作成功');
+        // }else{
+        //     console.log("xxx操作失败");
+        // }
+        //#endregion
+    </script>
+</body>
+
+</html>
